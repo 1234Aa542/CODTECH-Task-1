@@ -1,0 +1,218 @@
+#include <iostream>
+#include <list>
+#include <queue>
+using namespace std;
+
+// 1. Linked List Implementation
+struct Node {
+    int data;
+    Node* next;
+    Node(int val) : data(val), next(nullptr) {}
+};
+
+class LinkedList {
+    Node* head;
+public:
+    LinkedList() : head(nullptr) {}
+
+    void insert(int val) {
+        Node* newNode = new Node(val);
+        if (!head) {
+            head = newNode;
+        } else {
+            Node* temp = head;
+            while (temp->next) temp = temp->next;
+            temp->next = newNode;
+        }
+    }
+
+    void deleteNode(int val) {
+        if (!head) return;
+        if (head->data == val) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next && temp->next->data != val) temp = temp->next;
+        if (temp->next) {
+            Node* delNode = temp->next;
+            temp->next = temp->next->next;
+            delete delNode;
+        }
+    }
+
+    bool search(int val) {
+        Node* temp = head;
+        while (temp) {
+            if (temp->data == val) return true;
+            temp = temp->next;
+        }
+        return false;
+    }
+
+    void traverse() {
+        Node* temp = head;
+        while (temp) {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+// 2. Binary Tree Implementation
+struct TreeNode {
+    int data;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int val) : data(val), left(nullptr), right(nullptr) {}
+};
+
+class BinaryTree {
+    TreeNode* root;
+
+    void inorder(TreeNode* node) {
+        if (!node) return;
+        inorder(node->left);
+        cout << node->data << " ";
+        inorder(node->right);
+    }
+
+public:
+    BinaryTree() : root(nullptr) {}
+
+    void insert(int val) {
+        TreeNode* newNode = new TreeNode(val);
+        if (!root) {
+            root = newNode;
+            return;
+        }
+
+        TreeNode* temp = root;
+        while (true) {
+            if (val < temp->data) {
+                if (!temp->left) {
+                    temp->left = newNode;
+                    return;
+                }
+                temp = temp->left;
+            } else {
+                if (!temp->right) {
+                    temp->right = newNode;
+                    return;
+                }
+                temp = temp->right;
+            }
+        }
+    }
+
+    bool search(int val) {
+        TreeNode* temp = root;
+        while (temp) {
+            if (temp->data == val) return true;
+            if (val < temp->data) temp = temp->left;
+            else temp = temp->right;
+        }
+        return false;
+    }
+
+    void inorder() {
+        inorder(root);
+        cout << endl;
+    }
+};
+
+// 3. Graph Implementation
+class Graph {
+    int vertices;
+    list<int>* adjList;
+
+public:
+    Graph(int v) : vertices(v) {
+        adjList = new list<int>[v];
+    }
+
+    void addEdge(int u, int v) {
+        adjList[u].push_back(v);
+    }
+
+    void bfs(int start) {
+        bool* visited = new bool[vertices] {false};
+        queue<int> q;
+        visited[start] = true;
+        q.push(start);
+
+        while (!q.empty()) {
+            int node = q.front();
+            cout << node << " ";
+            q.pop();
+            for (int neighbor : adjList[node]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    q.push(neighbor);
+                }
+            }
+        }
+        cout << endl;
+    }
+
+    bool search(int start, int target) {
+        bool* visited = new bool[vertices] {false};
+        queue<int> q;
+        visited[start] = true;
+        q.push(start);
+
+        while (!q.empty()) {
+            int node = q.front();
+            if (node == target) return true;
+            q.pop();
+
+            for (int neighbor : adjList[node]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    q.push(neighbor);
+                }
+            }
+        }
+        return false;
+    }
+};
+
+int main() {
+    // Linked List
+    cout << "Linked List Operations:" << endl;
+    LinkedList list;
+    list.insert(10);
+    list.insert(20);
+    list.insert(30);
+    list.traverse();
+    list.deleteNode(20);
+    list.traverse();
+    cout << "Found 30: " << list.search(30) << endl;
+    cout << endl;
+
+    // Binary Tree
+    cout << "Binary Tree Operations:" << endl;
+    BinaryTree tree;
+    tree.insert(10);
+    tree.insert(20);
+    tree.insert(5);
+    tree.inorder();
+    cout << "Found 20: " << tree.search(20) << endl;
+    cout << endl;
+
+    // Graph
+    cout << "Graph Operations:" << endl;
+    Graph g(4);
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(1, 2);
+    g.addEdge(2, 3);
+    cout << "BFS starting from node 0: ";
+    g.bfs(0);
+    cout << "Found 3 from node 0: " << g.search(0, 3) << endl;
+
+    return 0;
+}
