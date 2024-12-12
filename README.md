@@ -28,3 +28,7 @@ Linked List (using nodes)
 Binary Tree (using tree nodes)
 Graph (using adjacency list and BFS)
 Key Concepts: Object-oriented programming, dynamic memory allocation, iterative traversal, and search algorithms.
+
+
+![Screenshot 2024-12-11 134334](https://github.com/user-attachments/assets/34d193fe-6bb0-43c3-bc7a-f4e46d20c60c)
+
